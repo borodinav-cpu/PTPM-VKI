@@ -2,18 +2,27 @@ import os
 import sys
 import unittest
 
-# Позволяем запускать тесты как из корня проекта, так и из PyCharm:
-# добавляем каталог src/ в путь поиска модулей.
-sys.path.insert(
-    0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src")
-)
+# Корень проекта и каталог src/ в путях поиска модулей — чтобы тесты
+# запускались любым способом: python tests\test_validator.py,
+# python -m unittest discover, python run_tests.py или из PyCharm.
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(BASE_DIR, "..", "src"))
+sys.path.insert(0, os.path.join(BASE_DIR, ".."))
 
-from validator import (
-    validate_login,
-    validate_password,
-    validate_registration,
-    mask_password,
-)
+try:
+    from src.validator import (
+        validate_login,
+        validate_password,
+        validate_registration,
+        mask_password,
+    )
+except ImportError:  # запасной вариант, если каталог src не пакет (нет __init__.py)
+    from validator import (
+        validate_login,
+        validate_password,
+        validate_registration,
+        mask_password,
+    )
 
 
 class TestValidateLogin(unittest.TestCase):

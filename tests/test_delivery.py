@@ -2,13 +2,17 @@ import os
 import sys
 import unittest
 
-# Позволяем запускать тесты как из корня проекта, так и из PyCharm:
-# добавляем каталог src/ в путь поиска модулей.
-sys.path.insert(
-    0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src")
-)
+# Корень проекта и каталог src/ в путях поиска модулей — чтобы тесты
+# запускались любым способом: python tests\test_delivery.py,
+# python -m unittest discover, python run_tests.py или из PyCharm.
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(BASE_DIR, "..", "src"))
+sys.path.insert(0, os.path.join(BASE_DIR, ".."))
 
-from delivery import calculate_delivery_cost
+try:
+    from src.delivery import calculate_delivery_cost
+except ImportError:  # запасной вариант, если каталог src не пакет (нет __init__.py)
+    from delivery import calculate_delivery_cost
 
 # ---------------------------------------------------------------------------
 # Восстановленные бизнес-требования (по контексту исходного кода):
